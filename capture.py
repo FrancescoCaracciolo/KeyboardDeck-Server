@@ -1,31 +1,42 @@
-import keyboard
-from socket import *
+from pynput import keyboard
+from time import sleep
+from network import NetworkManager
 import json
 
-IP = "localhost"
-serverPort = 12001
-clientSocket = socket(AF_INET, SOCK_DGRAM)  # AF_INET6 per IPV6, SOCK_STREAM TCP, SOCK_DGRAM UDP
+controlOn = 0
+network = NetworkManager('localhost', 42069)
 
-
-while True:
+def on_press(key):
+    global controlOn
     try:
-        n = keyboard.read_hotkey()
+        print('{0}'.format(
+            key.char))
         message = {
             "request": "send",
-            "event": str(n),
+            "event": str(key.char),
         }
-        print(n)
         message = json.dumps(message)
-        if n:
-            clientSocket.settimeout(2)
-            clientSocket.sendto(message.encode('utf-8'), (IP, serverPort))
-            try:
-                modifiedMessage, serverAddress = clientSocket.recvfrom(2048)
-                modifiedMessage = modifiedMessage.decode('utf-8')
-                #print("Numero di consontanti: ", modifiedMessage)
-            except timeout:
-                print("Il server non ha risposto")
-    except KeyboardInterrupt:
-        clientSocket.close()
-        exit()
+        network.sendUDP(message)
+        if controlOn % 2 == 1:
+            print("SIUM")
+    except AttributeError:
+        if (key == keyboard.Key.ctrl):
+            controlOn += 1
+        print('[{0}]'.format(
+            key))
 
+def on_release(key):
+    global controlOn
+    try:
+        key.char
+    except AttributeError:
+        if (key == keyboard.Key.ctrl):
+            controlOn += 1
+listener = keyboard.Listener(on_press=on_press, on_release = on_release)
+listener.start()
+while 1:
+    try:
+        sleep(1)
+    except KeyboardInterrupt:
+        listener.stop()
+        exit()

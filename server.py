@@ -1,18 +1,17 @@
 # SERVER
-# Netstat -aut vede i processi in ascolto
 from socket import *
 from update import update
 import json
-serverPort = 12001
+serverPort = 42069
 
 up = update()
 serverSocket = socket(AF_INET, SOCK_DGRAM)
 serverSocket.bind(("", serverPort))
 
-print("Server in asconto")
+print("Server running")
 while True:
 
-    message, clientAddress = serverSocket.recvfrom(2048) #Bufsize dimensione massima stringa in byte
+    message, clientAddress = serverSocket.recvfrom(2048)
 
     message = message.decode('utf-8')
     message = json.loads(message)
