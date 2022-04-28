@@ -18,7 +18,7 @@ def on_press(key):
         message = json.dumps(message)
         network.sendUDP(message)
         if controlOn % 2 == 1:
-            print("SIUM")
+            pass
     except AttributeError:
         if (key == keyboard.Key.ctrl):
             controlOn += 1
