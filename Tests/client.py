@@ -1,7 +1,7 @@
 from socket import *
 import json
 
-IP = "mc.silveros.it"
+IP = ""
 serverPort = 12001
 clientSocket = socket(AF_INET, SOCK_DGRAM)  # AF_INET6 per IPV6, SOCK_STREAM TCP, SOCK_DGRAM UDP
 
