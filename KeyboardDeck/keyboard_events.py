@@ -4,7 +4,6 @@ from pynput import keyboard
 
 
 def on_press(key, network, controlOn):
-
     try:
         print('{0}'.format(
             key.char))
@@ -22,8 +21,7 @@ def on_press(key, network, controlOn):
         print('[{0}]'.format(
             key))
 
-def on_release(key, network, controlOn):
-
+def on_release(key, controlOn):
     try:
         key.char
     except AttributeError:
