@@ -1,2 +1,2 @@
-pyinput
+pynput
 pyqt5
