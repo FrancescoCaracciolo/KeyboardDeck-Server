@@ -13,13 +13,6 @@ from PyQt5.QtWidgets import (
     QLabel,
 )
 
-def start_server(ip, port, listener):
-    print(ip.__str__, port)
-    network = NetworkManager(ip, port)
-    listener.stop()
-    listener.start()
-
-
 
 class Window(QWidget):
     
@@ -28,7 +21,7 @@ class Window(QWidget):
         self.controlOn = 0
         # Initialize the Keyboard Listener
         self.listener = keyboard.Listener(on_press= self.on_press, on_release= self.on_release)
-        
+
         self.setWindowTitle("KeyboardDeck Backend")
         # Initialize NetworkManager
         self.network = NetworkManager("127.0.0.1", 42069)
@@ -96,7 +89,7 @@ class Window(QWidget):
         kbfunc.on_press(key, self.network, self.controlOn)
     
     def on_release(self, key):
-        kbfunc.on_release(key, self.network, self.controlOn)
+        kbfunc.on_release(key, self.controlOn)
     
 
 if __name__ == "__main__":
