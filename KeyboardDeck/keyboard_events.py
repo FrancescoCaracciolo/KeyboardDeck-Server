@@ -9,7 +9,7 @@ def on_press(key, network, controlOn):
             key.char))
         message = {
             "request": "send",
-            "event": str(key.char),
+            "event": "a", # Temporary security measue //str(key.char)
         }
         message = json.dumps(message)
         network.sendUDP(message)
