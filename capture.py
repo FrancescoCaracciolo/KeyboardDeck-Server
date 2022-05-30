@@ -11,12 +11,7 @@ def on_press(key):
     try:
         print('{0}'.format(
             key.char))
-        message = {
-            "request": "send",
-            "event": str(key.char),
-        }
-        message = json.dumps(message)
-        network.sendUDP(message)
+        network.send_keypress("a")
         if controlOn % 2 == 1:
             pass
     except AttributeError:

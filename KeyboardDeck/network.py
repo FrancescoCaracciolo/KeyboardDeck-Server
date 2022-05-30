@@ -62,7 +62,7 @@ class NetworkManager:
         self.sendUDP(message)
     
     
-    def start_server(self, port: int):
+    def start_server(self, port: int, debug: bool = False):
         """Starts the server on current thread
 
         Args:
@@ -76,15 +76,23 @@ class NetworkManager:
             if self.stop_threads:
                 break
             try:
+                result = ""
                 message, client_address = server_socket.recvfrom(2048)
                 message = message.decode('utf-8')
+                print(message if debug else "")
                 message = json.loads(message)
                 if message['request'] == 'keypress':
-                    up.add(message['event'])
-                    result = "ok"
+                    up.add(message['key'])
+                    result = json.dumps({"ok": True})
                 if message['request'] == 'get':
                     data = up.print_remove()
-                    result = json.dumps(data)
+                    res = {
+                        "ok": True,
+                        "keys": data,
+                        "motd": "",
+                    }
+                    result = json.dumps(res)
+                print(result if debug else "")
                 server_socket.sendto(
                     result.encode('utf-8'),
                     client_address

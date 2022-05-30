@@ -2,6 +2,7 @@
 
 This is the basic backend for [KeyboardDeck-App](https://github.com/FrancescoCaracciolo/KeyboardDeck-App).
 
+[Requests structure](https://github.com/FrancescoCaracciolo/KeyboardDeck-Backend/wiki/KeyboardDeck-requests)
 ## Installation
 You need python3 installed, then you install the needed modules with
 ```
