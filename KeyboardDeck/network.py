@@ -60,7 +60,34 @@ class NetworkManager:
         }
         message = json.dumps(message)
         self.sendUDP(message)
+        
+    def update_motd(self, motd : str):
+        """Updates the current motd
+
+        Args:
+            motd (str): New motd
+        """
+        message = {
+            "request": 'updatemotd',
+            "motd": motd,
+        }
+        message = json.dumps(message)
+        self.sendUDP(message)
     
+    def update_motd_th(self, motd : str):
+        """Updates the current motd on another thread
+
+        Args:
+            motd (str): New motd
+        """
+        message = {
+            "request": 'updatemotd',
+            "motd": motd,
+        }
+        message = json.dumps(message)
+        thread = Thread(target= self.sendUDP, args=(message,))
+        thread.start()
+        
     
     def start_server(self, port: int, debug: bool = False):
         """Starts the server on current thread
@@ -68,6 +95,7 @@ class NetworkManager:
         Args:
             port (int): Port where the server is started
         """
+        motd = ""
         up = update()
         server_socket = socket(AF_INET, SOCK_DGRAM)
         server_socket.bind(("", port))
@@ -79,20 +107,22 @@ class NetworkManager:
                 result = ""
                 message, client_address = server_socket.recvfrom(2048)
                 message = message.decode('utf-8')
-                print(message if debug else "")
+                print(message + "\n" if debug else "", end="")
                 message = json.loads(message)
                 if message['request'] == 'keypress':
                     up.add(message['key'])
                     result = json.dumps({"ok": True})
+                if message['request'] == 'updatemotd':
+                    motd = message['motd']
                 if message['request'] == 'get':
                     data = up.print_remove()
                     res = {
                         "ok": True,
                         "keys": data,
-                        "motd": "",
+                        "motd": motd,
                     }
                     result = json.dumps(res)
-                print(result if debug else "")
+                print(result + "\n" if debug else "", end="")
                 server_socket.sendto(
                     result.encode('utf-8'),
                     client_address

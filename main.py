@@ -1,6 +1,7 @@
 import sys
 from pynput import keyboard
 from KeyboardDeck.network import NetworkManager
+from KeyboardDeck.music_info import NowPlaying
 import KeyboardDeck.keyboard_events as kbfunc
 from PyQt5.QtWidgets import (
     QApplication,
@@ -11,6 +12,7 @@ from PyQt5.QtWidgets import (
     QWidget,
     QPushButton,
     QLabel,
+    QSpacerItem,
 )
 
 
@@ -18,6 +20,7 @@ class Window(QWidget):
     
     def __init__(self):
         super().__init__()
+        self.np = NowPlaying()
         self.controlOn = 0
         # Initialize the Keyboard Listener
         self.listener = keyboard.Listener(on_press= self.on_press, on_release= self.on_release)
@@ -40,14 +43,32 @@ class Window(QWidget):
         options.addWidget(self.startcapture)
         options.addWidget(self.startserver)
         
-        status = QFormLayout() # Status Leyout
+        status = QFormLayout() # Status Layout
         self.capturelabel = QLabel("Capture: Off")
         self.serverlabel = QLabel("Server: Off")
         status.addRow(self.capturelabel)
         status.addRow(self.serverlabel)
         
+        settings = QFormLayout()  # Settings Layout
+        self.motd_line = QLineEdit("")
+        edit_motd_button = QPushButton("Edit")
+        edit_motd_button.clicked.connect(self.update_motd)
+        settings.addRow("Current Motd:", self.motd_line)
+        self.nowplaying = QCheckBox("Send Now Playing as MOTD")
+        settings.addRow(self.nowplaying)
+        self.nowplaying.clicked.connect(self.nowplaying_checked)
+        
+        if not self.np.is_supported():
+            self.nowplaying.setCheckable(False)
+            settings.addRow(QLabel("Not available on your OS"))
+            
+        settings.addRow(edit_motd_button)
+
+        
         windowLayout.addLayout(form)
         windowLayout.addLayout(options)
+        windowLayout.addLayout(settings)
+        windowLayout.addSpacerItem(QSpacerItem(0,30))
         windowLayout.addLayout(status)
         start = QPushButton("Start")
         stop = QPushButton("Stop")
@@ -58,6 +79,22 @@ class Window(QWidget):
 
         self.setLayout(windowLayout)
     
+    def update_motd(self):
+        self.network.update_motd_th(self.motd_line.text())
+    
+    def on_song_update(self, song: dict):
+        string = song["title"] + "\\auth//" + song["artist"]
+        self.network.update_motd_th(string)
+        self.motd_line.setText(string)
+
+    def nowplaying_checked(self):
+        if self.nowplaying.isChecked():
+            self.motd_line.setEnabled(False)
+            self.np.music_listener_th(self.on_song_update)
+        else:
+            self.motd_line.setEnabled(True)
+            self.np.stop_listener()
+
     def start(self):
         """Starts server/capture"""
         self.network = NetworkManager(self.server_ip.text(), int(self.server_port.text()))
@@ -72,6 +109,7 @@ class Window(QWidget):
             if self.network.server_running:
                 self.network.stop_server()
             self.network.start_server_th(self.network.port)
+
     def stop(self):
         """Stops Server/Capture"""
         if (self.listener.is_alive):
@@ -81,6 +119,7 @@ class Window(QWidget):
         if self.network.server_running:
             self.network.stop_server()
             self.serverlabel.setText("Server: Off")
+            self.np.stop_listener()
     
     def closeEvent(self, event) -> None:
         self.stop()
