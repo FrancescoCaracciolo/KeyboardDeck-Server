@@ -3,6 +3,7 @@ from pynput import keyboard
 from KeyboardDeck.network import NetworkManager
 from KeyboardDeck.music_info import NowPlaying
 import KeyboardDeck.keyboard_events as kbfunc
+import qdarkstyle
 from PyQt5.QtWidgets import (
     QApplication,
     QCheckBox,
@@ -133,6 +134,7 @@ class Window(QWidget):
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
+    app.setStyleSheet(qdarkstyle.load_stylesheet())
     window = Window()
     window.show()
     sys.exit(app.exec_())
