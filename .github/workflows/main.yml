@@ -21,7 +21,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - name: Ged dipendences
+    - name: Get dependences
+      continue-on-error: true
       run: pip install -r requirements.txt
     - name: Package Application
       uses: JackMcKew/pyinstaller-action-windows@main
