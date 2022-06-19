@@ -1,13 +1,16 @@
 from threading import Thread
 import time
-import dbus
 import platform
-
-from sympy import false
+if platform.system() == "Linux":
+    import dbus
+import asyncio
+if platform.system() == "Windows":
+    from winsdk.windows.media.control import \
+        GlobalSystemMediaTransportControlsSessionManager as MediaManager
 
 class NowPlaying():
     def __init__(self) -> None:
-        self.supported = ["Linux"]
+        self.supported = ["Linux", "Windows"]
         self.os = platform.system()
         self.listener_running = False
         
@@ -30,6 +33,8 @@ class NowPlaying():
         """
         if (self.os == "Linux"):
             return self.get_playing_linux()
+        elif self.os == "Windows":
+            return asyncio.run(self.get_playing_windows())
         return None
 
     def get_playing_linux(self) -> dict:
@@ -52,7 +57,22 @@ class NowPlaying():
                     return result
         except Exception as e:
             return None
-    
+    async def get_playing_windows(self) -> dict:
+        """Get current song playing on windows using winsdk
+
+        Returns:
+            dict: information about the song
+        """
+        sessions = await MediaManager.request_async()
+        current_session = sessions.get_current_session()
+        if current_session:
+            if True:
+                info = await current_session.try_get_media_properties_async()
+                info_dict = {song_attr: info.__getattribute__(song_attr) for song_attr in dir(info) if song_attr[0] != '_'}
+                info_dict['genres'] = list(info_dict['genres'])
+
+                return {"title": info_dict["title"], "artist": info_dict["artist"]}
+        return ""
     def music_listener(self, onchange: callable, interval: int = 1):
         """Starts music listener on current thread
 
