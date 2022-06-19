@@ -21,15 +21,12 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - name: Get dependences
-      continue-on-error: true
-      run: pip install -r requirements.txt
     - name: Package Application
-      uses: JackMcKew/pyinstaller-action-windows@main
+      uses: JackMcKew/pyinstaller-action-linux@main
       with:
         path: .
 
     - uses: actions/upload-artifact@v2
       with:
-        name: windows
-        path: src/dist/windows
+        name: name-of-artifact
+        path: src/dist/linux
