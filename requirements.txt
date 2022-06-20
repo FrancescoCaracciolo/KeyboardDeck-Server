@@ -1,3 +1,6 @@
 pynput
 pyqt5
 qdarkstyle
+winsdk
+asyncio
+dbus-python
