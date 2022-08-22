@@ -1,0 +1,4 @@
+pynput
+pyqt5
+qdarkstyle
+asyncio

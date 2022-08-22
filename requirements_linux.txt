@@ -1,0 +1,5 @@
+pynput
+pyqt5
+qdarkstyle
+asyncio
+dbus-python
