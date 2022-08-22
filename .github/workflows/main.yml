@@ -25,7 +25,7 @@ jobs:
     - uses: actions/upload-artifact@v2
       with:
         name: linux-build
-        path: dist/linux
+        path: .
 
   build_windows:
     name: Build Windows
@@ -37,13 +37,13 @@ jobs:
       - name: Package Application
         uses: JackMcKew/pyinstaller-action-windows@main
         with:
-          path: main.py
+          path: .
           requirements: requirements_windows.txt
       - name: Upload Artifacts
         uses: actions/upload-artifact@v2
         with:
           name: windows
-          path: src/dist/windows
+          path: .
 
   build_macos:
     name: Build MacOS
