@@ -18,15 +18,13 @@ jobs:
     - name: Setup Python
       uses: actions/setup-python@v4.2.0
       with:
-        # Version range or exact version of Python or PyPy to use, using SemVer's version range syntax. Reads from .python-version if unset.
         python-version: 3.8
-        # File containing the Python version to use. Example: .python-version
     - name: Intall requirements
       run: pip3 install -r requirements_linux.txt
     - name: Start build with PyInstaller
       run: pip3 install pyinstaller && pyinstaller -D -F -n main -c "main.py"
     - name: Upload Artifacts
-    - uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v2
       with:
         name: linux-build
         path: .
