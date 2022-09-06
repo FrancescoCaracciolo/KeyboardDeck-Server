@@ -15,14 +15,16 @@ jobs:
     
     steps:
     - uses: actions/checkout@v2
-
-    - name: Package Application
-      uses: JackMcKew/pyinstaller-action-linux@main
+    - name: Setup Python
+      uses: actions/setup-python@v4.2.0
       with:
-        path: main.py
-        requirements: requirements_linux.txt
-
-    - uses: actions/upload-artifact@v2
+        python-version: 3.8
+    - name: Intall requirements
+      run: pip3 install -r requirements_linux.txt
+    - name: Start build with PyInstaller
+      run: pip3 install pyinstaller && pyinstaller -D -F -n main -c "main.py"
+    - name: Upload Artifacts
+      uses: actions/upload-artifact@v2
       with:
         name: linux-build
         path: .
