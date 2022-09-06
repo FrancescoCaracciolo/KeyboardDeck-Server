@@ -1,0 +1,4 @@
+**/dist
+**/build
+KeyboardDeck*.AppImage
+**/__pycache__
