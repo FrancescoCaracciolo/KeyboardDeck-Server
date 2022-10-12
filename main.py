@@ -15,6 +15,12 @@ from PyQt5.QtWidgets import (
     QLabel,
     QSpacerItem,
 )
+from PyQt5 import QtGui, QtCore
+import ctypes
+
+
+appid = 'server.keyboarddeck.space' # arbitrary string
+ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(appid)
 
 
 class Window(QWidget):
@@ -134,7 +140,11 @@ class Window(QWidget):
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
+    app_icon = QtGui.QIcon()
+    app_icon.addFile('keyboarddeck.png', QtCore.QSize(256,256))
+    app.setWindowIcon(app_icon)
     app.setStyleSheet(qdarkstyle.load_stylesheet())
     window = Window()
+    window.setWindowIcon(app_icon)
     window.show()
     sys.exit(app.exec_())
