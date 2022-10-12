@@ -5,7 +5,7 @@ block_cipher = None
 
 
 a = Analysis(
-    ['main.py'],
+    ['..\\..\\..\\main.py'],
     pathex=[],
     binaries=[],
     datas=[],
@@ -35,11 +35,11 @@ exe = EXE(
     upx=True,
     upx_exclude=[],
     runtime_tmpdir=None,
-    console=False,
+    console=True,
     disable_windowed_traceback=False,
     argv_emulation=False,
     target_arch=None,
     codesign_identity=None,
     entitlements_file=None,
-    icon='keyboarddeck.ico',
+    icon='..\\..\\..\\keyboarddeck.ico',
 )
