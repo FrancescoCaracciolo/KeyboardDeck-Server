@@ -20,6 +20,7 @@ a = Analysis(
     noarchive=False,
 )
 pyz = PYZ(a.pure, a.zipped_data, cipher=block_cipher)
+a.datas += [('keyboarddeck.png','keyboarddeck.png', "DATA")]
 
 exe = EXE(
     pyz,
