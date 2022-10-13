@@ -5,7 +5,7 @@ block_cipher = None
 
 
 a = Analysis(
-    ['main.py'],
+    ['..\\..\\..\\main.py'],
     pathex=[],
     binaries=[],
     datas=[],
@@ -20,8 +20,7 @@ a = Analysis(
     noarchive=False,
 )
 pyz = PYZ(a.pure, a.zipped_data, cipher=block_cipher)
-a.datas += [('keyboarddeck.png','keyboarddeck.png', "DATA")]
-
+a.datas += [('keyboarddeck.png','..\..\..\keyboarddeck.png', "DATA")]
 exe = EXE(
     pyz,
     a.scripts,
@@ -42,5 +41,5 @@ exe = EXE(
     target_arch=None,
     codesign_identity=None,
     entitlements_file=None,
-    icon='keyboarddeck.ico',
+    icon='..\\..\\..\\keyboarddeck.ico',
 )

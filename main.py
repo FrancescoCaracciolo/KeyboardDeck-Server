@@ -1,4 +1,6 @@
 import sys
+import ctypes
+import os
 from pynput import keyboard
 from KeyboardDeck.network import NetworkManager
 from KeyboardDeck.music_info import NowPlaying
@@ -15,6 +17,20 @@ from PyQt5.QtWidgets import (
     QLabel,
     QSpacerItem,
 )
+from PyQt5 import QtGui, QtCore
+
+
+def resource_path(relative_path):
+    try:
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
+
+    return os.path.join(base_path, relative_path)
+
+
+appid = 'server.keyboarddeck.space' # arbitrary string
+ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(appid)
 
 
 class Window(QWidget):
@@ -134,7 +150,11 @@ class Window(QWidget):
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
+    app_icon = QtGui.QIcon()
+    app_icon.addFile(resource_path('keyboarddeck.png'), QtCore.QSize(256,256))
+    app.setWindowIcon(app_icon)
     app.setStyleSheet(qdarkstyle.load_stylesheet())
     window = Window()
+    window.setWindowIcon(app_icon)
     window.show()
     sys.exit(app.exec_())
